@@ -168,7 +168,7 @@ export default function App() {
     const { data: listener } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mountedRef.current) return;
 
-      // Väljalogimine ainult siis, kui tuleb selge SIGNED_OUT – vältib "viskamist välja" vahepealsete nullide tõttu
+      // Väljalogimine ainult siis, kui tuleb selge SIGNED_OUT
       if (event === "SIGNED_OUT") {
         setSession(null);
         setUserRole("worker");
@@ -176,14 +176,16 @@ export default function App() {
         return;
       }
 
-      setSession(newSession);
-
-      if (newSession?.user?.id) {
-        lastActivityRef.current = Date.now();
-        await loadUserProfile(newSession.user.id);
-      } else {
-        setUserRole("worker");
-        setUserName("");
+      // Ära kunagi kirjuta sessiooni nulliga üle (va SIGNED_OUT) – Supabase võib vahepeal saata null
+      if (newSession) {
+        setSession(newSession);
+        if (newSession.user?.id) {
+          lastActivityRef.current = Date.now();
+          await loadUserProfile(newSession.user.id);
+        } else {
+          setUserRole("worker");
+          setUserName("");
+        }
       }
     });
 
