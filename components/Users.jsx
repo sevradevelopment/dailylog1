@@ -462,21 +462,36 @@ Kasutaja tuleb luua Supabase Dashboard'is:
                 />
               </div>
               <div>
-                <label className="label label-large">PIN *</label>
-                <input
-                  type="text"
-                  className="input input-large"
-                  value={newUser.pin}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "");
-                    setNewUser({ ...newUser, pin: value });
-                  }}
-                  placeholder="4-6 numbrit"
-                  inputMode="numeric"
-                  maxLength={6}
-                  required
-                  style={{ fontSize: "1.125rem", padding: "1rem", letterSpacing: "0.125rem" }}
-                />
+                <label className="label label-large">PIN-kood (ainult numbrid) *</label>
+                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                  <input
+                    type="text"
+                    className="input input-large"
+                    value={newUser.pin}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      setNewUser({ ...newUser, pin: value });
+                    }}
+                    placeholder="4–6 numbrit"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    required
+                    style={{ fontSize: "1.125rem", padding: "1rem", letterSpacing: "0.125rem", flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      const newPin = String(Math.floor(1000 + Math.random() * 9000));
+                      setNewUser({ ...newUser, pin: newPin });
+                    }}
+                    title="Genereeri juhuslik 4-kohaline PIN"
+                    style={{ whiteSpace: "nowrap", padding: "1rem" }}
+                  >
+                    Uus kood
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="label label-large">Roll</label>
