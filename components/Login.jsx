@@ -59,7 +59,13 @@ export default function Login() {
     const msg = String(err?.message || err || "");
     if (!msg) return "Sisselogimine ebaõnnestus";
 
-    if (msg.includes("Invalid login credentials")) return "Vale e-post või PIN. Palun proovi uuesti.";
+    if (msg.includes("Invalid login credentials")) {
+      const base = "Vale e-post või PIN. Palun proovi uuesti.";
+      if (import.meta.env.DEV) {
+        return base + " (Dev: kontrolli, et kasutaja on loodud väärtusega PIN+SALT ja et VITE_PIN_SALT on õige.)";
+      }
+      return base;
+    }
     if (msg.toLowerCase().includes("network")) return "Võrguviga. Palun kontrolli internetti ja proovi uuesti.";
     if (msg.toLowerCase().includes("timeout")) return "Ühendus aegus. Palun proovi uuesti.";
     return msg;
@@ -78,12 +84,12 @@ export default function Login() {
     }
 
     if (!p || p.length < 4) {
-      setMessage("PIN peab olema vähemalt 4 numbrit");
+      setMessage("PIN-kood peab olema vähemalt 4 numbrit");
       return;
     }
 
     if (!SALT) {
-      setMessage("Seadistusviga: PIN_SALT puudub (VITE_PIN_SALT). Võta ühendust administraatoriga.");
+      setMessage("Seadistusviga: PIN-sool (VITE_PIN_SALT) puudub. Võta ühendust administraatoriga.");
       return;
     }
 
@@ -164,14 +170,15 @@ export default function Login() {
 
           <div className="field">
             <label className="label" htmlFor="pin">
-              PIN-kood
+              PIN-kood (ainult numbrid)
             </label>
             <input
               id="pin"
               type="password"
               className="input input-pin"
-              placeholder="••••"
+              placeholder="4–6 numbrit"
               inputMode="numeric"
+              pattern="[0-9]*"
               value={pin}
               onChange={(e) => {
                 setPin(normalizePin(e.target.value));
@@ -179,7 +186,7 @@ export default function Login() {
               }}
               disabled={loading}
               maxLength={6}
-              autoComplete="current-password"
+              autoComplete="one-time-code"
             />
           </div>
 
