@@ -167,11 +167,11 @@ export default function Users() {
       const instructions = `Kasutaja andmed kopeeritud lõikelauale!
 
 Email: ${email}
-Password: ${password}
+PIN+SALT (Supabase "User Password" väljale): ${password}
 
 Kasutaja tuleb luua Supabase Dashboard'is:
 1. Mine Authentication → Users → Add user
-2. Kleepi email ja password
+2. Email: kleepi ülalolev email; User Password: kleepi ülalolev PIN+SALT
 3. Kliki "Create user"
 4. Kopeeri UID ja kliki allpool "Lisa profiil"`;
 
@@ -292,14 +292,13 @@ Kasutaja tuleb luua Supabase Dashboard'is:
 
     // Märkus: supabase.auth.admin ei tööta client-side'is
     setMessage(
-      `⚠️ PIN reset nõuab Supabase admin õigusi.\n\n` +
-      `Mine Supabase Dashboard → Authentication → Users\n` +
-      `Vali kasutaja ${email}\n` +
+      `⚠️ PIN-koodi vahetus nõuab Supabase Dashboard'i.\n\n` +
+      `Mine Authentication → Users → vali ${email}\n` +
       `Kliki "Reset password"\n` +
-      `Uus parool: ${newPin}${SALT}`
+      `Uus väärtus (User Password): ${newPin}${SALT}`
     );
     
-    // Kopeeri uus parool lõikelauale
+    // Kopeeri uus PIN+SALT lõikelauale
     navigator.clipboard.writeText(`${newPin}${SALT}`);
     setTimeout(() => setMessage(""), 8000);
   }
