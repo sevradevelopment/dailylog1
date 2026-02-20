@@ -165,8 +165,16 @@ export default function App() {
       }
     })();
 
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mountedRef.current) return;
+
+      // Väljalogimine ainult siis, kui tuleb selge SIGNED_OUT – vältib "viskamist välja" vahepealsete nullide tõttu
+      if (event === "SIGNED_OUT") {
+        setSession(null);
+        setUserRole("worker");
+        setUserName("");
+        return;
+      }
 
       setSession(newSession);
 
