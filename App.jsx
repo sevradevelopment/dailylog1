@@ -10,7 +10,6 @@ import Locations from "./components/Locations";
 import Stats from "./components/Stats";
 import Fuel from "./components/Fuel";
 import Notifications from "./components/Notifications";
-import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import "./index.css";
 
 // Session timeout: 1 hour
@@ -223,7 +222,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
-      <PWAInstallPrompt />
     </div>
   );
 }
